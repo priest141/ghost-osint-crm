@@ -7,7 +7,7 @@ import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { defaultResource } from '@opentelemetry/resources';
 
 const provider = new WebTracerProvider({
-    resource: defaultResource.merge({
+    resource: defaultResource({
         attributes: {
             'service.name': 'ghost-osint-frontend',
         }
