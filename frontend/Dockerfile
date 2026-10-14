@@ -35,10 +35,13 @@ FROM nginx:1.25-alpine
 # Copy the build output from the build stage to Nginx's web server directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# nginx renders /etc/nginx/templates/*.template via envsubst at container start
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-# Expose port 80
+# Defaults keep docker-compose behaviour
+ENV PORT=80
+ENV BACKEND_URL=http://backend:3001
+
 EXPOSE 80
 
 # Start Nginx
