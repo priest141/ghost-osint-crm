@@ -38,9 +38,6 @@ COPY --from=build /app/build /usr/share/nginx/html
 # nginx renders /etc/nginx/templates/*.template via envsubst at container start
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-# Defaults keep docker-compose behaviour
-ENV PORT=80
-ENV BACKEND_URL=$BACKEND_URL
 
 EXPOSE 80
 
