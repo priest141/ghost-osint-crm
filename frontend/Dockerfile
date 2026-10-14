@@ -40,7 +40,7 @@ COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
 # Defaults keep docker-compose behaviour
 ENV PORT=80
-ENV BACKEND_URL=http://backend:3001
+ENV BACKEND_URL=$BACKEND_URL
 
 EXPOSE 80
 
