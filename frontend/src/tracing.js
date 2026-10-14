@@ -4,18 +4,10 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
-import { defaultResource } from '@opentelemetry/resources';
 
-const provider = new WebTracerProvider({
-    resource: defaultResource({
-        attributes: {
-            'service.name': 'ghost-osint-frontend',
-        }
-    }),
-});
+// Initialize the provider cleanly without custom Resource overrides
+const provider = new WebTracerProvider();
 
-// For client-side React, environmental variables are baked in at build time. 
-// Ensure REACT_APP_OTEL_URL is set in your build environment, or hardcode it for your lab.
 const exporter = new OTLPTraceExporter({
     url: process.env.REACT_APP_OTEL_URL || "https://openobserve-production-2c62.up.railway.app/api/default/v1/traces",
     headers: {
@@ -24,7 +16,9 @@ const exporter = new OTLPTraceExporter({
     }
 });
 
+// These methods will now work correctly
 provider.addSpanProcessor(new BatchSpanProcessor(exporter));
+
 provider.register({
     contextManager: new ZoneContextManager(),
 });
@@ -32,10 +26,9 @@ provider.register({
 registerInstrumentations({
     instrumentations: [
         getWebAutoInstrumentations({
-            // Ensures your frontend traces can link to your backend traces
             '@opentelemetry/instrumentation-fetch': {
                 propagateTraceHeaderCorsUrls: [
-                    "ghost-backend-prd.up.railway.app" // Replace with your actual backend URL/regex
+                    "/.*/" // You can restrict this to your specific Express backend URL later
                 ],
             },
         }),
