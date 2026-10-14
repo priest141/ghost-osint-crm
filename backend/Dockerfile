@@ -35,4 +35,4 @@ EXPOSE 3001
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Define the command to run your app (passed to entrypoint as arguments)
-CMD ["su-exec", "nodejs", "node", "server.js"]
+CMD ["node", "--require", "./tracing.js", "server.js"]
